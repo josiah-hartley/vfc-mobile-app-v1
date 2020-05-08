@@ -170,9 +170,13 @@ class _MessageDetailsState extends State<MessageDetails> with TickerProviderStat
   }
 
   Widget _playButton(MainModel model, Message message, int playingFromPlaylist, bool includeText) {
-    BorderSide border = BorderSide(width: 2.0, color: Theme.of(context).buttonColor);
-    Icon icon = Icon(Icons.play_arrow, color: Theme.of(context).buttonColor);
+    bool msgIsPlaying = model.isPlaying && message.id == model.currentlyPlayingMessage?.id;
     
+    BorderSide border = BorderSide(width: 2.0, color: Theme.of(context).buttonColor);
+    Icon icon = msgIsPlaying
+      ? Icon(Icons.pause, color: Theme.of(context).buttonColor)
+      : Icon(Icons.play_arrow, color: Theme.of(context).buttonColor);
+
     if (includeText) {
       return Expanded(
         child: Column(
@@ -185,7 +189,12 @@ class _MessageDetailsState extends State<MessageDetails> with TickerProviderStat
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               splashColor: Colors.transparent,
               onPressed: () {
-                model.playMessage(message);
+                if (msgIsPlaying) {
+                  model.pauseMessage(message);
+                } else {
+                  model.playMessage(message);
+                }
+                // set playlist
                 if (playingFromPlaylist != null) {
                   model.setCurrentPlaylist(playingFromPlaylist);
                 } else {
@@ -194,7 +203,7 @@ class _MessageDetailsState extends State<MessageDetails> with TickerProviderStat
               },
             ),
             RawMaterialButton(
-              child: Text('Play',
+              child: Text(msgIsPlaying ? 'Pause' : 'Play',
                 style: TextStyle(color: Theme.of(context).buttonColor, fontSize: 13.0),
               ),
               constraints: BoxConstraints(),
@@ -202,7 +211,12 @@ class _MessageDetailsState extends State<MessageDetails> with TickerProviderStat
               padding: EdgeInsets.only(top: 4.0),
               splashColor: Colors.transparent,
               onPressed: () { 
-                model.playMessage(message);
+                if (msgIsPlaying) {
+                  model.pauseMessage(message);
+                } else {
+                  model.playMessage(message);
+                }
+                // set playlist
                 if (playingFromPlaylist != null) {
                   model.setCurrentPlaylist(playingFromPlaylist);
                 } else {
@@ -225,7 +239,12 @@ class _MessageDetailsState extends State<MessageDetails> with TickerProviderStat
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         splashColor: Colors.transparent,
         onPressed: () {
-          model.playMessage(message);
+          if (msgIsPlaying) {
+            model.pauseMessage(message);
+          } else {
+            model.playMessage(message);
+          }
+          // set playlist
           if (playingFromPlaylist != null) {
             model.setCurrentPlaylist(playingFromPlaylist);
           } else {

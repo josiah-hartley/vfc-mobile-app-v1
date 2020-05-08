@@ -72,6 +72,7 @@ Future<Message> downloadMessageFile(Message message) async {
 
 Future<Message> _downloadAndSaveMp3(Message message, String url, String filepath) async {
   HttpClient client = new HttpClient();
+  print('starting download');
   client.badCertificateCallback = ((X509Certificate cert, String host, int port) {
     final isValidHost = host == 'voicesforchrist.net';
     return isValidHost;
@@ -109,7 +110,7 @@ Future<Message> _updateMessageLocationAndDuration(Message message, String filepa
 
 Future<Duration> _getDuration(String filepath) async {
   AudioPlayer player = AudioPlayer();
-  await player.setUrl(filepath);
+  await player.setUrl(filepath, isLocal: true);
 
   int duration = await Future.delayed(Duration(seconds:1), () => player.getDuration());
   return Duration(milliseconds: duration);
